@@ -14,8 +14,6 @@ export default ({ mode }) => {
           target: env.VITE_TARGET,
           secure: false,
           changeOrigin: true,
-          cookieDomainRewrite: "",
-          cookiePathRewrite: "/",
           configure: (proxy) => {
             proxy.on("proxyRes", (proxyRes) => {
               const cookies = proxyRes.headers["set-cookie"];

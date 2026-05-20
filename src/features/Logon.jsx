@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Logon({ onSetEmail, onSetToken }) {
+function Logon({ onSetEmail = () => {}, onSetToken = () => {} }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
@@ -27,7 +27,9 @@ function Logon({ onSetEmail, onSetToken }) {
         return;
       }
 
-      setAuthError(`Authentication failed: ${data?.message ?? "Unknown error"}`);
+      setAuthError(
+        `Authentication failed: ${data?.message ?? "Unknown error"}`,
+      );
     } catch (error) {
       setAuthError(`Error: ${error.name} | ${error.message}`);
     } finally {
