@@ -1,40 +1,32 @@
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth.js";
 
-function Logon({ onSetEmail = () => {}, onSetToken = () => {} }) {
+function Logon() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [isLoggingOn, setIsLoggingOn] = useState(false);
+  const { login } = useAuth();
 
   async function handleSubmit(event) {
     event.preventDefault();
     setAuthError("");
     setIsLoggingOn(true);
 
-    try {
-      const response = await fetch("/api/users/logon", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
+    const result = await login(email, password);
 
-      if (response.status === 200 && data.name && data.csrfToken) {
-        onSetEmail(data.name);
-        onSetToken(data.csrfToken);
-        setPassword("");
-        return;
-      }
-
-      setAuthError(
-        `Authentication failed: ${data?.message ?? "Unknown error"}`,
-      );
-    } catch (error) {
-      setAuthError(`Error: ${error.name} | ${error.message}`);
-    } finally {
-      setIsLoggingOn(false);
+    if (result.success) {
+      setPassword("");
+    } else {
+      setAuthError(result.error);
     }
+
+    if (!result.success) {
+      setIsLoggingOn(false);
+      return;
+    }
+
+    setIsLoggingOn(false);
   }
 
   return (
