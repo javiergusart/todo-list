@@ -1,16 +1,42 @@
 import "./App.css";
-import Logon from "./features/Logon.jsx";
-import TodosPage from "./features/Todos/TodosPage.jsx";
+import { Route, Routes } from "react-router";
+import RequireAuth from "./components/RequireAuth.jsx";
+import AboutPage from "./pages/AboutPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import TodosPage from "./pages/TodosPage.jsx";
 import Header from "./shared/Header.jsx";
-import { useAuth } from "./hooks/useAuth.js";
 
 function App() {
-  const { isAuthenticated } = useAuth();
-
   return (
     <div>
       <Header />
-      {isAuthenticated ? <TodosPage /> : <Logon />}
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/todos"
+            element={
+              <RequireAuth>
+                <TodosPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
     </div>
   );
 }
