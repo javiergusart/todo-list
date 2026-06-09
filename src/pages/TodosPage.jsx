@@ -285,7 +285,6 @@ function TodosPage() {
         </div>
       ) : null}
       {isTodoListLoading ? <p>Loading todos...</p> : null}
-      <StatusFilter />
       <SortBy
         sortBy={sortBy}
         sortDirection={sortDirection}
@@ -308,6 +307,7 @@ function TodosPage() {
           })
         }
       />
+      <StatusFilter />
       <FilterInput
         filterTerm={filterTerm}
         onFilterChange={handleFilterChange}
