@@ -1,0 +1,21 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth.js";
+
+function HomePage() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/todos", { replace: true });
+      return;
+    }
+
+    navigate("/login", { replace: true });
+  }, [isAuthenticated, navigate]);
+
+  return <p>Redirecting...</p>;
+}
+
+export default HomePage;

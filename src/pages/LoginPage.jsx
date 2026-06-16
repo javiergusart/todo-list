@@ -1,12 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth.js";
 
-function Logon() {
+function getRedirectTarget(locationState) {
+  const from = locationState?.from;
+
+  if (!from?.pathname) {
+    return "/todos";
+  }
+
+  return `${from.pathname}${from.search ?? ""}${from.hash ?? ""}`;
+}
+
+function LoginPage() {
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [isLoggingOn, setIsLoggingOn] = useState(false);
-  const { login } = useAuth();
+  const redirectTarget = getRedirectTarget(location.state);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(redirectTarget, { replace: true });
+    }
+  }, [isAuthenticated, navigate, redirectTarget]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -17,15 +37,11 @@ function Logon() {
 
     if (result.success) {
       setPassword("");
-    } else {
-      setAuthError(result.error);
-    }
-
-    if (!result.success) {
       setIsLoggingOn(false);
       return;
     }
 
+    setAuthError(result.error);
     setIsLoggingOn(false);
   }
 
@@ -58,4 +74,4 @@ function Logon() {
   );
 }
 
-export default Logon;
+export default LoginPage;

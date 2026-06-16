@@ -1,18 +1,21 @@
 import { useEffect, useReducer } from "react";
-import TodoForm from "./TodoForm.jsx";
-import TodoList from "./TodoList/TodoList.jsx";
-import SortBy from "../../shared/SortBy.jsx";
-import FilterInput from "../../shared/FilterInput.jsx";
-import useDebounce from "../../utils/useDebounce.js";
-import { useAuth } from "../../hooks/useAuth.js";
+import { useSearchParams } from "react-router";
+import TodoForm from "../features/Todos/TodoForm.jsx";
+import TodoList from "../features/Todos/TodoList/TodoList.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 import {
   initialTodoState,
   todoReducer,
   TODO_ACTIONS,
-} from "../../reducers/todoReducer.js";
+} from "../reducers/todoReducer.js";
+import FilterInput from "../shared/FilterInput.jsx";
+import SortBy from "../shared/SortBy.jsx";
+import StatusFilter from "../shared/StatusFilter.jsx";
+import useDebounce from "../utils/useDebounce.js";
 
 function TodosPage() {
   const { token } = useAuth();
+  const [searchParams] = useSearchParams();
   const [state, dispatch] = useReducer(todoReducer, initialTodoState);
   const {
     todoList,
@@ -25,6 +28,7 @@ function TodosPage() {
     filterError,
   } = state;
   const debouncedFilterTerm = useDebounce(filterTerm, 300);
+  const statusFilter = searchParams.get("status") || "all";
 
   useEffect(() => {
     async function fetchTodos() {
@@ -42,11 +46,12 @@ function TodosPage() {
           sortBy,
           sortDirection,
         };
+
         if (debouncedFilterTerm) {
           paramsObject.find = debouncedFilterTerm;
         }
-        const params = new URLSearchParams(paramsObject);
 
+        const params = new URLSearchParams(paramsObject);
         const response = await fetch(`/api/tasks?${params}`, options);
 
         if (response.status === 401) {
@@ -86,12 +91,12 @@ function TodosPage() {
     }
   }, [token, sortBy, sortDirection, debouncedFilterTerm]);
 
-  const handleFilterChange = (newTerm) => {
+  function handleFilterChange(newTerm) {
     dispatch({
       type: TODO_ACTIONS.SET_FILTER,
       payload: { filterTerm: newTerm },
     });
-  };
+  }
 
   async function addTodo(todoTitle) {
     const temporaryTodo = {
@@ -250,6 +255,7 @@ function TodosPage() {
 
   return (
     <section>
+      <h2>Todos</h2>
       {error ? (
         <div>
           <p role="alert">{error}</p>
@@ -301,6 +307,7 @@ function TodosPage() {
           })
         }
       />
+      <StatusFilter />
       <FilterInput
         filterTerm={filterTerm}
         onFilterChange={handleFilterChange}
@@ -311,6 +318,7 @@ function TodosPage() {
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
         dataVersion={dataVersion}
+        statusFilter={statusFilter}
       />
     </section>
   );
