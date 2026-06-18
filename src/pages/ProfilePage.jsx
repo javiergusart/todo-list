@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth.js";
+import styles from "../styles/ui.module.css";
 
 const initialStats = {
   total: 0,
@@ -34,6 +35,11 @@ function ProfilePage() {
           throw new Error("Unauthorized");
         }
 
+        if (response.status === 404) {
+          setTodoStats(initialStats);
+          return;
+        }
+
         if (!response.ok) {
           throw new Error("Failed to fetch todos");
         }
@@ -45,8 +51,10 @@ function ProfilePage() {
         const active = total - completed;
 
         setTodoStats({ total, completed, active });
-      } catch (fetchError) {
-        setError(`Error loading statistics: ${fetchError.message}`);
+      } catch {
+        setError(
+          "We could not load your statistics right now. Please try again.",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -60,21 +68,45 @@ function ProfilePage() {
     : 0;
 
   return (
-    <section>
-      <h2>Profile</h2>
-      <p>Name: {email || "Current user"}</p>
-      <p>Status: Authenticated</p>
+    <section className={`${styles.pageSection} ${styles.sectionStack}`}>
+      <div className={styles.heroCard}>
+        <h2 className={styles.sectionTitle}>Profile</h2>
+        <p className={styles.pageText}>
+          Signed in as {email || "Current user"}
+        </p>
+        <p className={styles.pageText}>Status: Authenticated</p>
+      </div>
 
-      <section>
-        <h3>Todo Statistics</h3>
-        {isLoading ? <p>Loading statistics...</p> : null}
-        {error ? <p role="alert">{error}</p> : null}
+      <section className={styles.sectionStack}>
+        <h3 className={styles.subsectionTitle}>Todo Statistics</h3>
+        {isLoading ? (
+          <div className={`${styles.statusMessage} ${styles.infoMessage}`}>
+            <p>Loading statistics...</p>
+          </div>
+        ) : null}
+        {error ? (
+          <div className={`${styles.statusMessage} ${styles.errorMessage}`}>
+            <p role="alert">{error}</p>
+          </div>
+        ) : null}
         {!isLoading && !error ? (
-          <div>
-            <p>Total todos: {todoStats.total}</p>
-            <p>Completed todos: {todoStats.completed}</p>
-            <p>Active todos: {todoStats.active}</p>
-            <p>Completion rate: {completionRate}%</p>
+          <div className={styles.statGrid}>
+            <div className={styles.statCard}>
+              <p className={styles.statLabel}>Total todos</p>
+              <p className={styles.statValue}>{todoStats.total}</p>
+            </div>
+            <div className={styles.statCard}>
+              <p className={styles.statLabel}>Completed</p>
+              <p className={styles.statValue}>{todoStats.completed}</p>
+            </div>
+            <div className={styles.statCard}>
+              <p className={styles.statLabel}>Active</p>
+              <p className={styles.statValue}>{todoStats.active}</p>
+            </div>
+            <div className={styles.statCard}>
+              <p className={styles.statLabel}>Completion rate</p>
+              <p className={styles.statValue}>{completionRate}%</p>
+            </div>
           </div>
         ) : null}
       </section>
