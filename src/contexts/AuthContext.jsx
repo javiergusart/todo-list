@@ -61,12 +61,12 @@ export function AuthProvider({ children }) {
 
       return {
         success: false,
-        error: `Authentication failed: ${data?.message ?? "Unknown error"}`,
+        error: "Unable to sign in with those credentials.",
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
-        error: `Error: ${error.name} | ${error.message}`,
+        error: "Unable to sign in right now. Please try again.",
       };
     }
   }
@@ -92,11 +92,10 @@ export function AuthProvider({ children }) {
         credentials: "include",
       });
 
-      let data = null;
       const contentType = response.headers.get("content-type") ?? "";
 
       if (contentType.includes("application/json")) {
-        data = await response.json();
+        await response.json();
       }
 
       clearAuthState();
@@ -104,16 +103,16 @@ export function AuthProvider({ children }) {
       if (!response.ok) {
         return {
           success: false,
-          error: data?.message ?? "Unable to log out.",
+          error: "Unable to log out right now. Please try again.",
         };
       }
 
       return { success: true };
-    } catch (error) {
+    } catch {
       clearAuthState();
       return {
         success: false,
-        error: `Error: ${error.name} | ${error.message}`,
+        error: "Unable to log out right now. Please try again.",
       };
     }
   }

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth.js";
+import styles from "../styles/ui.module.css";
 
 function RequireAuth({ children }) {
   const { isAuthenticated } = useAuth();
@@ -17,7 +18,11 @@ function RequireAuth({ children }) {
   }, [isAuthenticated, location, navigate]);
 
   if (!isAuthenticated) {
-    return <p>Redirecting to login...</p>;
+    return (
+      <section className={styles.pageSection}>
+        <p className={styles.redirectText}>Redirecting to login...</p>
+      </section>
+    );
   }
 
   return children;

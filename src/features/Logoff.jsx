@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth.js";
+import styles from "../styles/ui.module.css";
 
 function Logoff() {
   const { logout } = useAuth();
@@ -25,8 +26,17 @@ function Logoff() {
 
   return (
     <>
-      {error ? <p role="alert">{error}</p> : null}
-      <button type="button" onClick={handleLogoff} disabled={isLoggingOff}>
+      {error ? (
+        <div className={`${styles.statusMessage} ${styles.errorMessage}`}>
+          <p role="alert">{error}</p>
+        </div>
+      ) : null}
+      <button
+        className={`${styles.button} ${styles.secondaryButton}`}
+        type="button"
+        onClick={handleLogoff}
+        disabled={isLoggingOff}
+      >
         {isLoggingOff ? "Logging out..." : "Log Out"}
       </button>
     </>

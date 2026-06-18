@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  --color-background: #f3f7f4;
+  --color-background-strong: #dff5eb;
+  --color-surface: rgba(255, 255, 255, 0.88);
+  --color-ink: #0f172a;
+  --color-muted: #475569;
+  --color-accent: #0d9488;
+  --color-accent-dark: #0f766e;
+  --shadow-soft: 0 20px 45px rgba(15, 23, 42, 0.1);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(153, 246, 228, 0.7),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-background-strong),
+      var(--color-background)
+    );
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--color-ink);
+  background: transparent;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}

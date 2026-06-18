@@ -1,23 +1,25 @@
 import { Link } from "react-router";
+import styles from "../styles/ui.module.css";
 
 function NotFoundPage() {
   return (
-    <section>
-      <h2>Page Not Found</h2>
-      <p>The page you requested does not exist.</p>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Go Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/todos">Todos</Link>
-          </li>
-        </ul>
-      </nav>
+    <section className={`${styles.pageSection} ${styles.sectionStack}`}>
+      <h2 className={styles.sectionTitle}>Page Not Found</h2>
+      <p className={styles.pageText}>The page you requested does not exist.</p>
+      <div className={styles.buttonRow}>
+        <Link
+          className={`${styles.button} ${styles.primaryButton}`}
+          to="/login"
+        >
+          Go to Login
+        </Link>
+        <Link
+          className={`${styles.button} ${styles.secondaryButton}`}
+          to="/about"
+        >
+          About
+        </Link>
+      </div>
     </section>
   );
 }
